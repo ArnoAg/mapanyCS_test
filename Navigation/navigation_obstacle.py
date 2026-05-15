@@ -810,20 +810,23 @@ def main():
     parser.add_argument("--model",   required=True,  help="Chemin vers le fichier PLY ou GLB")
     parser.add_argument("--ref-dir", default=None,   help="Dossier d'images de référence pour la localisation (images.txt ou poses.json)")
     parser.add_argument("--salles",  default=None,   help="Fichier JSON des salles de classe (défaut: salles.json à côté du modèle)")
-    parser.add_argument("--host",    default="127.0.0.1")
+    parser.add_argument("--host",    default="0.0.0.0") # 0.0.0.0 si online, 127.0.0.1 si local
     parser.add_argument("--port",    type=int, default=5000)
     parser.add_argument("--debug",   action="store_true")
     args = parser.parse_args()
+
+    import os
+    port = int(os.environ.get("PORT", args.port)) # A modif si local
 
     print("="*60 + "\n🚀  Navigation 3D + Planification + Localisation\n" + "="*60)
     app = create_app(args.model, args.ref_dir, args.salles)
     if app is None: return 1
 
-    print(f"\n  Navigation 3D   → http://{args.host}:{args.port}")
-    print(f"  Distances       → http://{args.host}:{args.port}/minimap-distance")
-    print(f"  Trajectoire A→B → http://{args.host}:{args.port}/pathfinding")
-    print(f"  Orientation GPS → http://{args.host}:{args.port}/orientation\n" + "="*60)
-    app.run(host=args.host, port=args.port, debug=args.debug)
+    # print(f"\n  Navigation 3D   → http://{args.host}:{args.port}")                        En local
+    # print(f"  Distances       → http://{args.host}:{args.port}/minimap-distance")         En local
+    # print(f"  Trajectoire A→B → http://{args.host}:{args.port}/pathfinding")              En local
+    # print(f"  Orientation GPS → http://{args.host}:{args.port}/orientation\n" + "="*60)   En local
+    app.run(host="0.0.0.0", port=port, debug=args.debug) # A modif si local
     return 0
 
 
