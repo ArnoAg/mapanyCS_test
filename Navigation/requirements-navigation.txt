@@ -1,7 +1,7 @@
 # Dépendances pour l'application de Navigation 3D
 
 # Serveur web
-flask==3.0.0
+flask==3.1.3
 
 # Chargement et traitement des modèles 3D
 trimesh==3.23.5
